@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   
-  <!-- ربط ملف الإعدادات -->
+  <!-- ملف الإعدادات -->
   <script src="config.js"></script>
 
   <style>
@@ -90,63 +90,163 @@
     .stat-fb i{color:#1877f2}
     .stat-ig i{color:#e1306c}
 
-    /* ✨ قسم الشورتس ✨ */
-    .shorts-section{padding:40px 0 20px; position:relative;}
-    .shorts-container {
+    /* ✨ قسم الفيديو المميز (الجديد) ✨ */
+    .featured-section{padding:40px 0}
+    .featured-card {
         display: flex;
-        gap: 16px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 20px;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-    .shorts-container::-webkit-scrollbar { display: none; }
-    .short-card {
-        flex: 0 0 160px;
-        scroll-snap-align: start;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
         background: #171923;
         border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 24px;
+        max-width: 700px;
+        margin: auto;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .featured-card:hover {
+        border-color: var(--purple);
+        box-shadow: 0 10px 40px rgba(155, 92, 255, 0.2);
+        transform: translateY(-5px);
+    }
+    .featured-img-wrapper {
+        width: 100%;
+        aspect-ratio: 16/9;
         border-radius: 16px;
         overflow: hidden;
         position: relative;
-        cursor: pointer;
-        transition: transform 0.3s, border-color 0.3s;
-        aspect-ratio: 9/16;
     }
-    .short-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--purple);
-    }
-    .short-card img {
+    .featured-img-wrapper img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.8;
-        transition: opacity 0.3s;
+        transition: transform 0.5s;
     }
-    .short-card:hover img { opacity: 1; }
-    .short-overlay {
+    .featured-card:hover .featured-img-wrapper img {
+        transform: scale(1.05);
+    }
+    .play-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 15px 10px;
+        background: rgba(0,0,0,0.4);
+        display: grid;
+        place-items: center;
+        transition: background 0.3s;
     }
-    .short-title {
+    .featured-card:hover .play-overlay {
+        background: rgba(155, 92, 255, 0.3);
+    }
+    .play-overlay i {
+        font-size: 4rem;
         color: #fff;
-        font-size: 0.85rem;
-        font-weight: 700;
-        margin-bottom: 5px;
-        text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        text-shadow: 0 0 20px rgba(0,0,0,0.8);
+        transition: transform 0.3s;
     }
-    .short-platform { font-size: 1.2rem; }
-    .short-platform.yt { color: #ff0000; }
-    .short-platform.ig { color: #e1306c; }
-    .short-platform.tt { color: #25f4ee; }
-    .short-platform.fb { color: #1877f2; }
+    .featured-card:hover .play-overlay i {
+        transform: scale(1.2);
+    }
+    .featured-title {
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: #fff;
+        text-align: center;
+    }
+    .featured-hint {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    /* ✨ النافذة المنبثقة (Modal) ✨ */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .modal-content {
+        background: #11131a;
+        border: 1px solid #9b5cff66;
+        border-radius: 24px;
+        padding: 30px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        position: relative;
+    }
+    .modal-overlay.active .modal-content {
+        transform: translateY(0);
+    }
+    .modal-title {
+        font-size: 1.2rem;
+        font-weight: 900;
+        margin-bottom: 5px;
+        color: #fff;
+    }
+    .modal-subtitle {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 25px;
+    }
+    .platform-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .platform-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #fff;
+        text-decoration: none;
+        transition: transform 0.2s, filter 0.2s;
+    }
+    .platform-link:hover {
+        transform: scale(1.05);
+        filter: brightness(1.2);
+    }
+    .platform-link.yt { background: #ff0000; }
+    .platform-link.fb { background: #1877f2; }
+    .platform-link.tt { background: #000000; border: 1px solid #25f4ee; color: #25f4ee; }
+    .platform-link.ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+    
+    .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color: #fff;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition: background 0.2s;
+    }
+    .close-modal:hover { background: rgba(255,0,0,0.5); }
 
     .section{padding:80px 0}
     .section-head{display:flex;align-items:end;justify-content:space-between;gap:25px;margin-bottom:38px}
@@ -203,7 +303,7 @@
       .section{padding:50px 0}.section-head{display:block}.section-sub{margin-top:12px}.video-grid{grid-template-columns:1fr}.about-layout{grid-template-columns:1fr}.about-panel{padding:25px}
       .connect{padding:55px 20px}footer{margin-top:65px}.footer-row{justify-content:center;text-align:center}
       .follow-inner{flex-direction:column;text-align:center;gap:20px}.follow-info{flex-direction:column;text-align:center}.follow-btn{width:100%}
-      .short-card { flex: 0 0 140px; }
+      .platform-links { grid-template-columns: 1fr; }
     }
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
   </style>
@@ -219,7 +319,7 @@
       </a>
       <div class="nav-links" id="navLinks">
         <a href="#home">الرئيسية</a>
-        <a href="#shorts">شورتس</a>
+        <a href="#featured">فيديو مميز</a>
         <a href="#videos">الفيديوهات</a>
         <a href="#about">عن القناة</a>
       </div>
@@ -296,18 +396,38 @@
       </div>
     </section>
 
-    <!-- قسم الشورتس الجديد -->
-    <section class="shorts-section" id="shorts">
+    <!-- الفيديو المميز (اللي بيفتح الاختيارات) -->
+    <section class="featured-section" id="featured">
       <div class="container">
-        <div class="section-head">
-          <div><div class="kicker">SHORT VIDEOS</div><h2>أحدث الشورتس</h2></div>
-          <p class="section-sub">اسحب يمين وشمال عشان تشوف كل الفيديوهات.</p>
+        <div class="section-head" style="justify-content: center; text-align: center;">
+          <div><div class="kicker">LATEST DROP</div><h2>الفيديو المميز</h2></div>
         </div>
-        <div class="shorts-container" id="shortsContainer">
-          <!-- الشورتس هتظهر هنا أوتوماتيك من config.js -->
+        
+        <div class="featured-card" id="featuredCard">
+          <div class="featured-img-wrapper">
+            <img src="" id="featuredImg" alt="Featured Video">
+            <div class="play-overlay">
+              <i class="fa-solid fa-circle-play"></i>
+            </div>
+          </div>
+          <div class="featured-title" id="featuredTitle"></div>
+          <div class="featured-hint"><i class="fa-solid fa-hand-pointer"></i> اضغط لاختيار المنصة</div>
         </div>
       </div>
     </section>
+
+    <!-- النافذة المنبثقة للاختيارات -->
+    <div class="modal-overlay" id="platformModal">
+      <div class="modal-content">
+        <button class="close-modal" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-title">شاهد الفيديو على</div>
+        <div class="modal-subtitle">اختر المنصة المفضلة لديك</div>
+        
+        <div class="platform-links" id="platformLinksContainer">
+          <!-- الأزرار هتظهر هنا بالجافاسكريبت -->
+        </div>
+      </div>
+    </div>
 
     <section class="section" id="videos">
       <div class="container">
@@ -356,7 +476,7 @@
     
     const decode = (str) => str.replace(/\\x([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
 
-    // قراءة الأرقام من config.js (لو لقاها مشفرة هيفكها)
+    // 1. تحديث الإحصائيات
     if (typeof _MG_CFG !== 'undefined') {
         const getStat = (val) => val.includes('\\x') ? parseInt(decode(val)) : parseInt(val);
         document.getElementById('statYt').textContent = formatNumber(getStat(_MG_CFG.y));
@@ -365,35 +485,47 @@
         document.getElementById('statIg').textContent = formatNumber(getStat(_MG_CFG.i));
     }
 
-    // بناء الشورتس
-    const shortsContainer = document.getElementById('shortsContainer');
-    if (typeof _MG_SHORTS !== 'undefined' && _MG_SHORTS.length > 0) {
-        _MG_SHORTS.forEach(short => {
-            const title = short.title;
-            const imgUrl = short.img;
-            const videoUrl = short.url;
-            const type = short.type;
+    // 2. إعداد الفيديو المميز والنافذة المنبثقة
+    const featuredCard = document.getElementById('featuredCard');
+    const featuredImg = document.getElementById('featuredImg');
+    const featuredTitle = document.getElementById('featuredTitle');
+    const platformModal = document.getElementById('platformModal');
+    const closeModal = document.getElementById('closeModal');
+    const platformLinksContainer = document.getElementById('platformLinksContainer');
 
-            let platformIcon = 'fa-brands fa-youtube';
-            let platformClass = 'yt';
-            if(type === 'instagram') { platformIcon = 'fa-brands fa-instagram'; platformClass = 'ig'; }
-            if(type === 'tiktok') { platformIcon = 'fa-brands fa-tiktok'; platformClass = 'tt'; }
-            if(type === 'facebook') { platformIcon = 'fa-brands fa-facebook-f'; platformClass = 'fb'; }
+    if (typeof _MG_FEATURED !== 'undefined') {
+        // تحميل بيانات الفيديو
+        featuredImg.src = _MG_FEATURED.img;
+        featuredTitle.textContent = _MG_FEATURED.title;
 
-            const cardHTML = `
-                <a href="${videoUrl}" target="_blank" rel="noopener" class="short-card">
-                    <img src="${imgUrl}" alt="${title}" loading="lazy">
-                    <div class="short-overlay">
-                        <div class="short-title">${title}</div>
-                        <div class="short-platform ${platformClass}"><i class="${platformIcon}"></i></div>
-                    </div>
-                </a>
-            `;
-            shortsContainer.insertAdjacentHTML('beforeend', cardHTML);
+        // بناء أزرار المنصات داخل النافذة
+        const links = _MG_FEATURED.links;
+        let linksHTML = '';
+        
+        if (links.youtube) linksHTML += `<a href="${links.youtube}" target="_blank" rel="noopener" class="platform-link yt"><i class="fa-brands fa-youtube"></i> YouTube</a>`;
+        if (links.facebook) linksHTML += `<a href="${links.facebook}" target="_blank" rel="noopener" class="platform-link fb"><i class="fa-brands fa-facebook-f"></i> Facebook</a>`;
+        if (links.tiktok) linksHTML += `<a href="${links.tiktok}" target="_blank" rel="noopener" class="platform-link tt"><i class="fa-brands fa-tiktok"></i> TikTok</a>`;
+        if (links.instagram) linksHTML += `<a href="${links.instagram}" target="_blank" rel="noopener" class="platform-link ig"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
+        
+        platformLinksContainer.innerHTML = linksHTML;
+
+        // فتح النافذة عند الضغط
+        featuredCard.addEventListener('click', () => {
+            platformModal.classList.add('active');
         });
     }
 
-    // الموقع الأساسي
+    // إغلاق النافذة
+    closeModal.addEventListener('click', () => {
+        platformModal.classList.remove('active');
+    });
+    platformModal.addEventListener('click', (e) => {
+        if (e.target === platformModal) {
+            platformModal.classList.remove('active');
+        }
+    });
+
+    // 3. باقي الموقع (القائمة والأعلى)
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
     menuToggle.addEventListener('click', () => {
